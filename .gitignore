@@ -1,0 +1,37 @@
+# Render artifacts (regeneratable)
+cv/*.pdf
+cv/*.png
+cv/preview_*.html
+
+# User-specific resume content (keep only example)
+cv/content_*.yaml
+!cv/example_content.yaml
+
+# Personal configuration
+config.py
+
+# Job artifacts from real usage
+job*/
+
+# Applied history
+applied.json
+
+# Deprecated auto-apply code
+_deprecated/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# Virtual environment
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

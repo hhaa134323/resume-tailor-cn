@@ -1,0 +1,137 @@
+/* ============================================================
+   简历样式
+   caca 改这里会影响所有版本
+   注意：页边距由 body.padding 控制（在 template.html inline style 设）
+   ============================================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
+
+body {
+  font-family: 'Times New Roman', 'KaiTi', '楷体', 'STKaiti', serif;
+  font-size: 11pt;
+  line-height: 1.4;
+  text-align: justify;
+  color: #000;
+}
+
+/* ---- Header ---- */
+.header {
+  text-align: center;
+  margin-bottom: 8pt;
+}
+.header .name {
+  font-size: 18pt;
+  font-weight: bold;
+  letter-spacing: 3pt;
+  margin-bottom: 4pt;
+}
+.header .contact {
+  font-size: 10.5pt;
+  margin-bottom: 2pt;
+  color: #333;
+}
+.header .contact .sep {
+  margin: 0 6pt;
+  color: #999;
+}
+.header .intern-terms {
+  font-size: 9pt;
+  color: #333;
+}
+
+/* ---- Section ---- */
+.section {
+  margin-top: 6pt;
+}
+.section-heading {
+  font-size: 12pt;
+  font-weight: bold;
+  letter-spacing: 1pt;
+  padding-bottom: 2pt;
+  border-bottom: 1pt solid #000;
+  margin-bottom: 4pt;
+  page-break-after: avoid;
+  break-after: avoid;
+}
+.positioning-text {
+  padding: 2pt 0;
+  line-height: 1.5;
+  text-align: justify;
+}
+
+/* ---- Education 4-column grid ---- */
+.edu-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;       /* 列宽固定，长学院名在本格换行不挤别列 */
+}
+.edu-table td {
+  padding: 0 4pt 0 0;
+  vertical-align: top;
+}
+.col-school  { width: 20%; }
+.col-college { width: 32%; }
+.col-major   { width: 28%; }
+.col-date    { width: 20%; text-align: right; white-space: nowrap; padding-right: 0; color: #444; }
+
+/* ---- Entry title ---- */
+.entry-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8pt;
+  font-weight: bold;
+  margin-top: 2pt;
+  page-break-after: avoid;   /* 标题别和它的 bullet 拆到两页 */
+  break-after: avoid;
+}
+.entry-title .title-main { flex: 1; }
+.entry-title .title-date {
+  white-space: nowrap;
+  font-weight: normal;
+  color: #444;
+}
+
+/* ---- Bullet list ---- */
+.bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.bullet-list li {
+  padding-left: 0;
+  margin-top: 1.5pt;
+  text-align: justify;
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+.bullet-list li::before {
+  content: none;
+}
+.bullet-list {
+  margin-bottom: 4pt;
+}
+.bullet-lead, .skill-lead {
+  font-weight: bold;
+}
+
+/* ---- 链接 / 打印 ---- */
+a {
+  color: #000;
+  text-decoration: none;
+}
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

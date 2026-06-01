@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ basics.name }} — 简历</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      padding: {{ page_margin_top }} {{ page_margin_x }} {{ page_margin_bottom }} {{ page_margin_x }};
+      font-size: {{ font_size_base }};
+      line-height: {{ line_height }};
+    }
+    .header .name { font-size: {{ font_size_name }}; }
+    .header .contact { font-size: {{ font_size_base }}; }
+    .section-heading { font-size: {{ font_size_heading }}; }
+    .section { margin-top: {{ section_gap }}; }
+    .bullet-list li { margin-top: {{ bullet_gap }}; }
+  </style>
+</head>
+<body>
+
+<!-- ======== Header ======== -->
+<div class="header">
+  <div class="name">{{ basics.name }}</div>
+  <div class="contact">
+    电话：{{ basics.phone }}<span class="sep">|</span>邮箱：{{ basics.email }}
+  </div>
+  <div class="intern-terms">{{ basics.intern_terms }}</div>
+</div>
+
+<!-- ======== 个人定位 ======== -->
+{% if positioning %}
+<div class="section">
+  <div class="section-heading">个人定位</div>
+  <div class="positioning-text">{{ positioning }}</div>
+</div>
+{% endif %}
+
+<!-- ======== 教育经历 ======== -->
+<div class="section">
+  <div class="section-heading">教育经历</div>
+  <table class="edu-table">
+    {% for row in education.rows %}
+    <tr>
+      <td class="col-school">{{ row.school }}</td>
+      <td class="col-college">{{ row.college }}</td>
+      <td class="col-major">{{ row.major }}</td>
+      <td class="col-date">{{ row.date }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  <ul class="bullet-list">
+    {% for note in education.notes %}
+    <li><span class="bullet-lead">{{ note.lead }}：</span>{{ note.text }}</li>
+    {% endfor %}
+  </ul>
+</div>
+
+<!-- ======== 项目经历 ======== -->
+{% if projects %}
+<div class="section">
+  <div class="section-heading">项目经历</div>
+  {% for proj in projects %}
+  <div class="entry-title">
+    <span class="title-main">{{ proj.title }}</span>
+    <span class="title-date">{{ proj.date }}</span>
+  </div>
+  <ul class="bullet-list">
+    {% for bul in proj.bullets %}
+    <li><span class="bullet-lead">{{ bul.lead }}：</span>{{ bul.text }}</li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ======== 实习经历 ======== -->
+{% if internships %}
+<div class="section">
+  <div class="section-heading">实习经历</div>
+  {% for intern in internships %}
+  <div class="entry-title">
+    <span class="title-main">{{ intern.org }}　{{ intern.role }}</span>
+    <span class="title-date">{{ intern.date }}</span>
+  </div>
+  <ul class="bullet-list">
+    {% for bul in intern.bullets %}
+    <li><span class="bullet-lead">{{ bul.lead }}：</span>{{ bul.text }}</li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- ======== 专业技能 ======== -->
+{% if skills %}
+<div class="section">
+  <div class="section-heading">专业技能</div>
+  <ul class="bullet-list">
+    {% for sk in skills %}
+    <li><span class="skill-lead">{{ sk.label }}：</span>{{ sk.content }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+</body>
+</html>
