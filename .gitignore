@@ -11,7 +11,8 @@ cv/content_*.yaml
 config.py
 
 # Job artifacts from real usage
-job*/
+jobs/
+!jobs/example/
 
 # Applied history
 applied.json

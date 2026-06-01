@@ -55,18 +55,29 @@
 ## 项目里有什么
 
     cv/
-      render.py             读内容、套模板、生成 PDF 的脚本
+      render.py             渲染脚本：读内容、套模板、生成 PDF
       template.html         简历模板
-      style.css             排版样式，中文楷体加英文 Times New Roman
-      example_content.yaml  内容示例，信息是虚构的，复制后改成自己的
+      style.css             排版样式
+      example_content.yaml  内容示例（信息全部虚构）
+    scripts/
+      ocr_jd.py             JD 截图中文 OCR
+    docs/
+      jd_assessment.md      岗位评估规则
+    jobs/
+      example/              虚构 JD 示例
     .claude/
-      agents/hr-reviewer.md   模拟 HR 评审的子助手
-      commands/hr-review.md   /hr-review 命令
+      agents/
+        jd-analyzer.md      岗位评估子助手
+        hr-reviewer.md      模拟 HR 评审子助手
+      commands/
+        tailor-from-jd.md   端到端命令
+        hr-review.md        /hr-review 命令
     SKILL.md              写给 AI 的说明书
     CLAUDE.md             项目约定
     greeting_guide.md     打招呼语生成指南
-    requirements.txt      运行环境依赖
+    requirements.txt      运行环境
     LICENSE               MIT
+
 
 ## License
 
