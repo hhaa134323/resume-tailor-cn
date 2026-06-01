@@ -8,9 +8,13 @@ render.py — YAML → Jinja2 → Playwright PDF
   python cv/render.py content.yaml --out 简历_公司.pdf
   python cv/render.py content.yaml --auto-fit   # 自动收缩到 1 页
   python cv/render.py content.yaml --dry-run    # 只输出 HTML 预览
+
+注意：依赖 Playwright 无头 Chromium 做 HTML→PDF 渲染，
+     需要额外一步：playwright install chromium
+     不是用于浏览器自动化或反爬对抗。
 """
 
-import sys, os, shutil, tempfile, copy
+import sys, os, copy, tempfile, shutil
 from pathlib import Path
 
 import yaml
