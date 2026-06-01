@@ -1,240 +1,96 @@
 # Resume Tailor CN
 
-把母版简历按目标 JD 裁剪，渲染为一页 A4 PDF。内容和排版分离：YAML 管内容，HTML + CSS 管排版，render.py 拼合后调用 Chromium 无头浏览器输出 PDF。
+一个简历定制工具。你用大白话告诉 AI 助手「帮我按这个岗位改简历」，它就替你改好内容、排好版，导出成一页 A4 的 PDF。日常使用完全不需要你写代码。
 
-可以作为 Claude Code Skill 使用，也支持纯手动运行，不依赖任何 AI 服务。
+它是怎么运作的，一句话讲清楚：你的简历内容和排版是分开的。内容存在一个文本文件里，排版样式已经调好固定住，一个脚本负责把内容套进模板生成 PDF。这些活儿都交给 AI 助手去跑，你只管开口说要什么。
 
-## 作为 Skill 喂给 AI
+## 你需要准备什么
 
-这个仓库自带 SKILL.md，AI agent（Claude Code、Cursor、Cline、其他兼容 agent）读到后能理解完整的工作流程。
+- 一台电脑，作者用的是 Windows 11，Mac 也可以。
+- 一个 AI 编程助手，任选一个：Claude Code、Cursor、Cline 等都行。
+- 第一次使用要装一次运行环境。如果你不懂这些，不用自己折腾，打开项目后直接对 AI 助手说一句「帮我把这个项目的运行环境装好」，它会一步步替你装完。
 
-把仓库交给 AI 的方式：
+## 第一步：把这个工具交给你的 AI 助手
 
-- **Claude Code**：把项目根目录作为 Claude Code 的工作目录启动，它会自动读取根目录的 SKILL.md 和 CLAUDE.md，按技能执行。
-- **全局安装**（可选）：把仓库放到 `~/.claude/skills/resume-tailor-cn/`，或在 Claude Code 设置中通过路径引用。
-- **其他 agent**：把 SKILL.md 的内容作为系统指令提供给 AI，或按各工具约定整合（见下方安装小节）。
+这个仓库里有一份 SKILL.md，它是专门写给 AI 看的说明书，告诉 AI 这个工具该怎么用。你要做的，就是让你的助手能读到它。不同助手放的位置不一样：
 
-核心渲染脚本 render.py 始终可以独立运行，不依赖任何 agent。
+- **Claude Code**：最省事。直接用 Claude Code 打开这个项目文件夹，它会自动读取 SKILL.md 和 CLAUDE.md，不用额外设置。
+- **Cursor**：把 SKILL.md 的内容复制到项目里的 `.cursor/rules/` 文件夹下，存成一个 `.md` 文件，Cursor 的内置 AI 会把它当成项目规则。
+- **VS Code（Cline 或 Roo Code）**：把 SKILL.md 的内容整合进对应扩展的指令文件里。
+- **JetBrains 系（内置 AI Assistant）**：把 SKILL.md 内容放到 `.junie/guidelines/` 下。
 
-## 安装
+以上这步本身也可以让 AI 助手帮你做，你只要说「帮我把 SKILL.md 配置成你的项目规则」即可。配好之后，AI 就知道怎么用这套工具了。
 
-### Claude Code
+## 第二步：用大白话让它干活
 
-在 Claude Code 中直接 cd 到项目目录即可使用。项目根目录的 SKILL.md 和 CLAUDE.md 定义了完整的工作方式和约束。
+配好之后，你只需要在对话框里说人话。下面这些话都能让它开始工作：
 
-如果想把技能全局注册：
+- 「帮我针对 XX 公司的 XX 岗位定制简历」
+- 「这是这个岗位的招聘要求，按它改我的简历并导出 PDF」，然后把招聘要求粘进去
+- 「帮我写这个岗位的打招呼语」
+- 「跑一遍模拟 HR 评审」，或者直接输入 `/hr-review`
 
-```bash
-# 软链到 Claude Code skills 目录（如果该目录存在）
-ln -s D:/AgentProjects/resume-skill-public ~/.claude/skills/resume-tailor-cn
-```
+它会自动完成一整套流程：读懂岗位要求，裁剪和调整你的简历内容，生成 PDF，需要的话再做一轮模拟 HR 评审、按反馈改稿、重新导出。
 
-或直接在 Claude Code 中用 `claude --add-dir D:/AgentProjects/resume-skill-public` 引用。
+第一次用的时候，先把你的真实简历信息告诉它，或者让它读你现有的简历文件，它会替你填进内容文件，之后每次换岗位就在这个基础上调整。
 
-### Cursor
+## 你会拿到什么
 
-把 SKILL.md 内容复制到 `.cursor/rules/` 下（例如 `.cursor/rules/resume-tailor.md`），Cursor 的内置 AI 会自动识别为项目规则。
+成品是一份 PDF，存在项目的 `cv` 文件夹里。一页 A4，中文用楷体、英文和数字用 Times New Roman，排版已经固定调好，你不用操心格式。
 
-### VS Code（Cline / Roo Code）
+针对不同公司投递时，可以让助手为每家公司单独存一份内容文件，互不影响。这些个人内容文件已经设置成不会被上传到 GitHub，不用担心信息泄露。
 
-Cline 和 Roo Code 等扩展支持项目级指令文件。把 SKILL.md 的内容整合进对应的指令配置文件即可。
+## 常见问题
 
-### JetBrains（AI Assistant）
+- **PDF 里中文变成方框或乱码**：说明电脑缺楷体字体。Windows 一般自带楷体，如果出现这个问题，跟助手说「中文显示成方框了，帮我换成系统里有的字体」即可。
+- **内容一页放不下**：跟助手说「太长了，帮我压到一页」，它会先收紧排版，还不够就帮你删掉最不相关的经历。
+- **个人信息安全**：示例文件里的姓名、学校、公司都是虚构的。你自己的内容文件已被设置为不会提交到 GitHub。
+- **打招呼语不会自动发送**：助手只负责写出来，发到招聘平台这一步要你自己复制粘贴。
 
-JetBrains AI Assistant 支持项目级 guidelines。把 SKILL.md 内容放到 `.junie/guidelines/` 下。
+## 进阶：开发者手动用法（可选）
 
-### 纯手动 / 任意 agent
+如果你熟悉命令行，也可以不经过 AI，自己跑脚本。这部分对不写代码的人没用，可以跳过。
 
-不安装任何插件。直接 clone 仓库，安装 Python 依赖，编辑 YAML 后运行 render.py。所有功能正常使用。详见下方"快速上手"。
+环境准备：
 
-## 环境准备
-
-- Python 3.10+
-- Windows 11（作者环境；macOS / Linux 同样兼容，命令微调见括号说明）
-
-```bash
-# 1. 建虚拟环境
+\`\`\`bash
 python -m venv .venv
-
-# 2. 激活
-# Windows:
-.venv\Scripts\activate
-# macOS / Linux:
-# source .venv/bin/activate
-
-# 3. 安装依赖
+# Windows 激活：.venv\Scripts\activate
+# Mac / Linux 激活：source .venv/bin/activate
 pip install -r requirements.txt
-
-# 4. 安装 Playwright 的 Chromium 浏览器
 playwright install chromium
-```
+# 如提示缺包：pip install pyyaml jinja2 pypdf2
+\`\`\`
 
-requirements.txt 实际安装的包：
-
-| 包 | 用途 |
-|------|------|
-| playwright>=1.40.0 | 无头浏览器渲染 PDF |
-| rich>=13.0.0 | 终端输出高亮（当前版本暂未在 render.py 中导入，预留） |
-
-render.py 运行时还会使用 PyYAML、Jinja2、PyPDF2（通常随 Playwright 或已安装的包间接满足），如果报 ModuleNotFoundError，手动补装：
-
-```bash
-pip install pyyaml jinja2 pypdf2
-```
-
-## 快速上手
-
-### 1. 准备简历内容
-
-```bash
-# 复制示例文件
-cp cv/example_content.yaml cv/content.yaml
-# Windows 也支持:
-# copy cv\example_content.yaml cv\content.yaml
-```
-
-### 2. 编辑 YAML
-
-用文本编辑器打开 `cv/content.yaml`，把里面的姓名、电话、邮箱、教育经历、项目、实习、技能替换成你自己的。格式参考 `cv/example_content.yaml`。
-
-### 3. 渲染 PDF
-
-```bash
-python cv/render.py cv/content.yaml --auto-fit
-```
-
-输出文件：`cv/content.pdf`（一页 A4，如果内容超过一页会自动压缩）。
-
-### 按不同岗位定制
-
-```bash
-# 每个目标公司建一个独立内容文件
-cp cv/content.yaml cv/content_公司A.yaml
-cp cv/content.yaml cv/content_公司B.yaml
-```
-
-每个 YAML 文件独立编辑，按对应 JD 调整个人定位、项目排序和技能重点。分别渲染：
-
-```bash
-python cv/render.py cv/content_公司A.yaml --auto-fit
-python cv/render.py cv/content_公司B.yaml --auto-fit
-```
-
-`.gitignore` 已排除所有 `content_*.yaml`（`example_content.yaml` 除外），不会误提交个人信息。
-
-### YAML 结构
-
-| 字段 | 对应排版位置 |
-|------|-------------|
-| `basics.name` | 页首大号姓名 |
-| `basics.phone` / `basics.email` | 联系方式 |
-| `basics.intern_terms` | 出勤说明 |
-| `positioning` | 个人定位（一段话） |
-| `education.rows` | 学校 / 学院 / 专业 / 时间，四列表格 |
-| `education.notes` | 课程、证书等补充说明，带加粗 lead-in |
-| `projects` | 项目经历，每项含 title、date、bullets |
-| `internships` | 实习经历，每项含 org、role、date、bullets |
-| `skills` | 专业技能，每项含 label、content |
-
-bullet 格式：`lead` 加粗做分隔符，`text` 是正文，中间用中文冒号连接。
-
-## 功能一览
-
-| 功能 | 说明 |
-|------|------|
-| YAML 内容 → PDF 渲染 | 内容格式分离，改内容不碰样式，改样式不动内容 |
-| 一页自适应校验 | `--auto-fit` 先 CSS 压缩（收紧字号、行距、间距、边距），还不够时按优先级裁剪内容（删技能条目 -> 删 bullet -> 删整个条目） |
-| 4 级紧凑预设 | `--compact 0-3` 手动选择排版密度等级 |
-| 中文楷体 + 英文 Times New Roman | 浏览器按字形自动回退，Windows 自带字体无需额外下载 |
-| HTML 预览模式 | `--dry-run` 只生成 HTML，不转 PDF，快速预览排版 |
-| 招呼语生成 | `greeting_guide.md` 定义生成规范，去 AI 味，按岗位分档定制 |
-| HR 评审子代理 | `hr-reviewer` agent 从 HR + 用人经理双视角做结构化评审 |
-| `/hr-review` 斜杠命令 | 自动走：渲染 → 提取 PDF 文本 → 调 hr-reviewer → 改 YAML → 重渲，最多 2 轮闭环 |
-
-### render.py 命令行选项
+渲染命令：
 
 | 命令 | 作用 |
 |------|------|
-| `python cv/render.py cv/content.yaml` | 默认参数渲染 PDF（紧凑等级 0） |
-| `python cv/render.py cv/content.yaml --auto-fit` | 自动收缩到一页 |
-| `python cv/render.py cv/content.yaml --out 简历.pdf` | 指定输出文件名 |
-| `python cv/render.py cv/content.yaml --dry-run` | 只生成 HTML 预览，不转 PDF |
-| `python cv/render.py cv/content.yaml --compact 2` | 手动指定紧凑等级（0-3，越大越紧） |
+| \`python cv/render.py cv/content.yaml\` | 按默认排版生成 PDF |
+| \`python cv/render.py cv/content.yaml --auto-fit\` | 自动收缩到一页 |
+| \`python cv/render.py cv/content.yaml --compact 2\` | 手动指定紧凑等级，0 到 3，越大越紧 |
+| \`python cv/render.py cv/content.yaml --dry-run\` | 只生成 HTML 预览，不转 PDF |
+| \`python cv/render.py cv/content.yaml --out 简历.pdf\` | 指定输出文件名 |
 
-不传 content 路径时默认读取 `cv/content.yaml`，输出到同名 `.pdf` 文件。
-
-## 调用方式
-
-### Claude Code 斜杠命令
-
-| 命令 | 作用 |
-|------|------|
-| `/hr-review` | 渲染当前简历 → 提取文本 → hr-reviewer 子代理评审 → 按反馈修改 → 重渲。默认用最近修改的 `cv/content_*.yaml`，也可指定文件名 |
-
-### 自然语言触发（Claude Code 中）
-
-以下表述可以触发技能：
-
-- "帮我针对 XX 公司 XX 岗位定制简历"
-- "跑 /hr-review"
-- "帮我写打招呼语"
-- "按这份 JD 改简历并渲染成 PDF"
-
-AI agent 会自动走：读 JD → 裁剪 YAML 内容 → 渲染 PDF → （可选）HR 评审 → 修改 → 定稿。
-
-## 注意事项
-
-### 中文渲染缺字
-
-PDF 中文变成方框或乱码，说明系统缺少楷体字体。Windows 通常自带楷体（KaiTi / 华文楷体），如果出现缺字：
-
-1. 确认系统已安装"楷体"或"华文楷体"
-2. macOS / Linux 可能需要额外安装中文字体
-3. 调整 `style.css` 中 `body` 的 `font-family` 顺序，把首选字体改成你确定有的字体
-
-### 一页放不下
-
-`--auto-fit` 有极限。按以下顺序手动干预：
-
-1. 删条目：在 YAML 里删掉最不相关的项目或实习
-2. 缩 bullet：缩短每条 bullet 的文字，或删掉次要 bullet
-3. 合并行：技能条目合并，教育经历如果学校多可以只留最近的
-4. 用 `--compact 3` 最紧凑等级渲染
-
-以上都不够，说明内容确实超过一页容量，必须裁剪。
-
-### 母版路径
-
-render.py 以自身所在目录（`cv/`）作为资源根目录，template.html 和 style.css 都从那里加载。不要在项目根目录之外运行 render.py。
-
-### 模拟内容与脱敏
-
-`cv/example_content.yaml` 中的姓名、学校、公司、联系方式均为虚构示例。`cv/content_*.yaml` 已被 .gitignore 排除，不会误提交。实际使用时注意不要在提交中带入真实个人信息。
-
-### 招呼语不自动发送
-
-招呼语由 AI 在对话中输出，需要你手动复制到招聘平台发送。
+内容文件 `cv/example_content.yaml` 里有完整的字段示例，复制一份改成自己的即可。
 
 ## 项目结构
 
-```
+\`\`\`
 ├── cv/
-│   ├── render.py                 # 渲染入口：YAML → Jinja2 → HTML → Playwright PDF
-│   ├── template.html             # Jinja2 简历模板
-│   ├── style.css                 # 打印样式（中文楷体 + 英文 TNR）
-│   └── example_content.yaml      # 示例内容（虚构），替换后使用
+│   ├── render.py             渲染脚本：读内容、套模板、生成 PDF
+│   ├── template.html         简历模板
+│   ├── style.css             排版样式，中文楷体加英文 Times New Roman
+│   └── example_content.yaml  内容示例，虚构信息，复制后改成自己的
 ├── .claude/
-│   ├── agents/
-│   │   └── hr-reviewer.md        # HR 评审子代理定义
-│   └── commands/
-│       └── hr-review.md          # /hr-review 命令定义
-├── CLAUDE.md                     # 项目约定
-├── SKILL.md                      # Skill 说明
-├── greeting_guide.md             # 招呼语生成指南
-├── requirements.txt              # Python 依赖
-├── LICENSE                       # MIT
-└── README.md                     # 本文件
-```
+│   ├── agents/hr-reviewer.md     模拟 HR 评审的子助手
+│   └── commands/hr-review.md     /hr-review 命令定义
+├── CLAUDE.md                 项目约定
+├── SKILL.md                  写给 AI 的说明书
+├── greeting_guide.md         打招呼语生成指南
+├── requirements.txt          Python 依赖
+└── LICENSE                   MIT
+\`\`\`
 
 ## License
 
